@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TME Plus Bundle Tool</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Login Screen -->
+    <div id="login-screen" class="screen">
+      <h1>TME Plus Bundle Tool</h1>
+      <p class="subtitle">Internal billing tool</p>
+      <form id="login-form">
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Enter password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+        <p id="login-error" class="error-message"></p>
+      </form>
+    </div>
+
+    <!-- Main Screen -->
+    <div id="main-screen" class="screen hidden">
+      <header>
+        <h1>TME Plus Bundle Tool</h1>
+        <button id="logout-btn" class="btn btn-secondary btn-small">Logout</button>
+      </header>
+
+      <!-- Customer Lookup -->
+      <section id="lookup-section">
+        <h2>Customer Lookup</h2>
+        <form id="lookup-form">
+          <div class="form-group">
+            <label for="email">Customer Email</label>
+            <input type="email" id="email" placeholder="customer@example.com" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Look Up Customer</button>
+        </form>
+        <p id="lookup-error" class="error-message"></p>
+      </section>
+
+      <!-- Customer Info (shown after lookup) -->
+      <section id="customer-section" class="hidden">
+        <h2>Customer Details</h2>
+        <div class="customer-card">
+          <p><strong>Name:</strong> <span id="customer-name"></span></p>
+          <p><strong>Email:</strong> <span id="customer-email"></span></p>
+          <p><strong>Payment Method:</strong> <span id="customer-payment"></span></p>
+          <p id="existing-sub-info" class="warning-message hidden">
+            <strong>Warning:</strong> Customer has an existing subscription
+          </p>
+        </div>
+
+        <!-- Offer Buttons -->
+        <div class="offer-buttons">
+          <button id="full-pay-btn" class="btn btn-offer">
+            <span class="offer-title">TME Plus Bundle</span>
+            <span class="offer-subtitle">Full Pay</span>
+            <span class="offer-price">$2,999</span>
+          </button>
+          <button id="three-pay-btn" class="btn btn-offer">
+            <span class="offer-title">TME Plus Bundle</span>
+            <span class="offer-subtitle">3-Pay</span>
+            <span class="offer-price">$1,067 × 3</span>
+          </button>
+        </div>
+
+        <button id="reset-btn" class="btn btn-secondary">Look Up Different Customer</button>
+      </section>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirm-modal" class="modal hidden">
+      <div class="modal-content">
+        <h2>Confirm Charge</h2>
+        <div class="confirm-details">
+          <p><strong>Customer:</strong> <span id="confirm-name"></span></p>
+          <p><strong>Email:</strong> <span id="confirm-email"></span></p>
+          <p><strong>Offer:</strong> <span id="confirm-offer"></span></p>
+          <p><strong>Amount:</strong> <span id="confirm-amount"></span></p>
+        </div>
+        <p class="warning-message">This will charge the customer's payment method immediately.</p>
+        <div class="modal-buttons">
+          <button id="confirm-cancel-btn" class="btn btn-secondary">Cancel</button>
+          <button id="confirm-proceed-btn" class="btn btn-danger">Charge Customer</button>
+        </div>
+        <p id="confirm-error" class="error-message"></p>
+      </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="modal hidden">
+      <div class="modal-content success">
+        <h2>Success!</h2>
+        <div class="success-details">
+          <p><strong>Transaction ID:</strong> <span id="success-transaction"></span></p>
+          <p><strong>Subscription ID:</strong> <span id="success-subscription"></span></p>
+          <div id="scheduled-payments" class="hidden">
+            <p><strong>Scheduled Payments:</strong></p>
+            <ul id="scheduled-list"></ul>
+          </div>
+        </div>
+        <div class="manual-step">
+          <p><strong>Manual Step Required:</strong></p>
+          <p>Please manually provision user in membership.io</p>
+        </div>
+        <button id="success-done-btn" class="btn btn-primary">Done</button>
+      </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="overlay hidden">
+      <div class="spinner"></div>
+      <p id="loading-message">Processing...</p>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
