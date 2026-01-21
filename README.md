@@ -33,6 +33,19 @@ TOOL_PASSWORD=your-password
 PORT=3000
 ```
 
+#### Finding the THREE_PAY_SCHEME_ID
+
+The 3-Pay option requires a Payment Schedule Scheme in Chargebee. To find or create one:
+
+1. Log into your Chargebee site
+2. Go to **Settings** → **Configure Chargebee** → **Payment Schedule Schemes**
+3. Create a new scheme (if needed):
+   - Name: "3 Monthly Payments" (or similar)
+   - Number of payments: 3
+   - Frequency: Monthly
+4. Copy the scheme ID from the scheme details page
+5. Add it to your `.env` file as `THREE_PAY_SCHEME_ID`
+
 ### 3. Start the Server
 
 ```bash
