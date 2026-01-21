@@ -38,7 +38,7 @@ PORT=3000
 The 3-Pay option requires a Payment Schedule Scheme in Chargebee. To find or create one:
 
 1. Log into your Chargebee site
-2. Go to **Settings** → **Configure Chargebee** → **Payment Schedule Schemes**
+2. Go to **Settings** → **Configure Chargebee** → **Billing LogIQ** → **Payments** → **Payment Schedules**
 3. Create a new scheme (if needed):
    - Name: "3 Monthly Payments" (or similar)
    - Number of payments: 3
