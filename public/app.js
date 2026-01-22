@@ -290,11 +290,22 @@ successDoneBtn.addEventListener('click', () => {
 });
 
 // Check for existing session on load
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   const savedSessionId = localStorage.getItem('sessionId');
   if (savedSessionId) {
     sessionId = savedSessionId;
-    loginScreen.classList.add('hidden');
-    mainScreen.classList.remove('hidden');
+
+    // Verify session is still valid
+    try {
+      showLoading('Verifying session...');
+      await apiRequest('/auth/verify');
+      loginScreen.classList.add('hidden');
+      mainScreen.classList.remove('hidden');
+    } catch (error) {
+      // apiRequest handles 401 by showing login page
+      console.log('[Session] Invalid or expired');
+    } finally {
+      hideLoading();
+    }
   }
 });

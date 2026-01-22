@@ -8,6 +8,11 @@ const config = require('../config');
 // POST /api/auth/login
 router.post('/auth/login', login);
 
+// POST /api/auth/verify
+router.post('/auth/verify', authenticate, (req, res) => {
+  res.json({ success: true, message: 'Session is valid' });
+});
+
 // POST /api/customer/lookup
 router.post('/customer/lookup', authenticate, async (req, res) => {
   try {
@@ -172,6 +177,7 @@ router.post('/register-to-mio', authenticate, async (req, res) => {
   }
 });
 
+
 // POST /api/register-to-hub
 router.post('/register-to-hub', authenticate, async (req, res) => {
   try {
@@ -184,6 +190,12 @@ router.post('/register-to-hub', authenticate, async (req, res) => {
       });
     }
 
+    console.log('asd:', {
+      hub_hash: config.platform.hubHash,
+      email,
+      name,
+      member_tag: config.platform.memberTag
+    })
     const apiResult = await platformApiRequest({
       endpoint: '/api/client/hubs/auth/magic-link',
       method: 'POST',
