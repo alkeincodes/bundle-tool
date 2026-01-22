@@ -183,7 +183,7 @@ resetBtn.addEventListener('click', resetCustomerView);
 fullPayBtn.addEventListener('click', () => {
   pendingOffer = 'full-pay';
   console.log('full pay')
-  showConfirmModal('Full Pay', '$2,999');
+  showConfirmModal('Full Pay', '$2,702');
 });
 
 threePayBtn.addEventListener('click', () => {
@@ -216,7 +216,7 @@ confirmProceedBtn.addEventListener('click', async () => {
 
   const endpoint = pendingOffer === 'full-pay' ? '/offer/full-pay' : '/offer/three-pay';
   const loadingMsg = pendingOffer === 'full-pay'
-    ? 'Processing $2,999 charge...'
+    ? 'Processing $2,702 charge...'
     : 'Processing first payment...';
 
   try {

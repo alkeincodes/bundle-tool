@@ -178,7 +178,7 @@ async function applyPaymentSchedule(invoiceId, schemeId) {
 /**
  * Process Full Pay offer
  * - Create subscription with coupon
- * - Create one-time $2,999 charge
+ * - Create one-time $2,702 charge
  */
 async function processFullPay(customerId, customerEmail) {
   // 1. Create or update subscription with coupon
