@@ -46,6 +46,8 @@ const loadingMessage = document.getElementById('loading-message');
 let pendingOffer = null;
 let isProcessing = false;
 
+// Make an authenticated API call
+
 // Utility Functions
 function showLoading(message = 'Processing...') {
   loadingMessage.textContent = message;
@@ -133,6 +135,8 @@ lookupForm.addEventListener('submit', async (e) => {
     showLoading('Looking up customer...');
     const result = await apiRequest('/customer/lookup', { email });
 
+    console.log('[Customer Lookup] Success - ID:', result.customer.id, 'Email:', result.customer.email);
+
     currentCustomer = result.customer;
     displayCustomer(result.customer);
   } catch (error) {
@@ -170,6 +174,7 @@ resetBtn.addEventListener('click', resetCustomerView);
 // Offer Buttons
 fullPayBtn.addEventListener('click', () => {
   pendingOffer = 'full-pay';
+  console.log('full pay')
   showConfirmModal('Full Pay', '$2,999');
 });
 
@@ -215,7 +220,18 @@ confirmProceedBtn.addEventListener('click', async () => {
       customerEmail: currentCustomer.email
     });
 
-    showSuccessModal(result);
+    // Register customer to hub after successful payment
+    try {
+      const hubResult = await apiRequest('/register-to-hub', {
+        email: currentCustomer.email,
+        name: `${currentCustomer.firstName} ${currentCustomer.lastName}`.trim()
+      });
+      console.log('[Register to Hub] Result:', hubResult.data);
+    } catch (hubError) {
+      console.error('[Register to Hub] Error:', hubError.message);
+    }
+
+    await showSuccessModal(result);
   } catch (error) {
     confirmModal.classList.remove('hidden');
     showError(confirmError, error.message);
@@ -227,7 +243,7 @@ confirmProceedBtn.addEventListener('click', async () => {
 });
 
 // Success Modal
-function showSuccessModal(result) {
+async function showSuccessModal(result) {
   successTransaction.textContent = result.transactionId;
   successSubscription.textContent = result.subscriptionId;
 

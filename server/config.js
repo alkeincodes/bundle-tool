@@ -18,4 +18,11 @@ module.exports = {
   server: {
     port: parseInt(process.env.PORT, 10) || 3000,
   },
+  platform: {
+    apiUrl: process.env.PLATFORM_API_URL,
+    clientId: process.env.PLATFORM_CLIENT_ID,
+    clientSecret: process.env.PLATFORM_CLIENT_SECRET,
+    hubHash: process.env.PLATFORM_HUB_HASH,
+    memberTag: process.env.PLATFORM_MEMBER_TAG,
+  },
 };

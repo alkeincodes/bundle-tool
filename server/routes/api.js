@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const { authenticate, login } = require('../middleware/auth');
 const chargebeeService = require('../services/chargebee');
+const { platformApiRequest } = require('../services/platform');
+const config = require('../config');
 
 // POST /api/auth/login
 router.post('/auth/login', login);
@@ -43,6 +45,8 @@ router.post('/customer/lookup', authenticate, async (req, res) => {
 
     // Get existing subscriptions
     const existingSubscriptions = await chargebeeService.getExistingSubscriptions(customer.id);
+
+    console.log(`[Customer Lookup] Success - ID: ${customer.id}, Email: ${customer.email}`);
 
     res.json({
       success: true,
@@ -126,6 +130,46 @@ router.post('/offer/three-pay', authenticate, async (req, res) => {
     res.status(500).json({
       success: false,
       error: 'Connection error. Please try again.'
+    });
+  }
+});
+
+// POST /api/register-to-hub
+router.post('/register-to-hub', authenticate, async (req, res) => {
+  try {
+    const { email, name } = req.body;
+
+    if (!email || !name) {
+      return res.status(400).json({
+        success: false,
+        error: 'Email and name are required'
+      });
+    }
+
+    const apiResult = await platformApiRequest({
+      endpoint: '/api/client/hubs/auth/magic-link',
+      method: 'POST',
+      body: {
+        hub_hash: config.platform.hubHash,
+        email,
+        name,
+        member_tag: config.platform.memberTag
+      },
+      errorMessage: 'Failed to register to hub'
+    });
+
+    console.log('[Register to Hub] Result:', apiResult);
+
+    res.json({
+      success: true,
+      data: apiResult
+    });
+  } catch (error) {
+    console.error('Register to Hub API error:', error);
+
+    res.status(error.statusCode || 500).json({
+      success: false,
+      error: error.message || 'Failed to register to hub'
     });
   }
 });

@@ -31,6 +31,12 @@ THREE_PAY_AMOUNT=106700
 THREE_PAY_SCHEME_ID=your-scheme-id
 TOOL_PASSWORD=your-password
 PORT=3000
+
+PLATFORM_API_URL=https://platform-api-domaon.com
+PLATFORM_CLIENT_ID=platform_client_id
+PLATFORM_CLIENT_SECRET=platform_client_secret
+PLATFORM_HUB_HASH=platform_hub_hash
+PLATFORM_MEMBER_TAG=platform_member_tag
 ```
 
 #### Finding the THREE_PAY_SCHEME_ID
