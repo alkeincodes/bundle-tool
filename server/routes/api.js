@@ -134,6 +134,44 @@ router.post('/offer/three-pay', authenticate, async (req, res) => {
   }
 });
 
+// POST /api/register-to-mio
+router.post('/register-to-mio', authenticate, async (req, res) => {
+  try {
+    const { customerId, email } = req.body;
+
+    if (!customerId || !email) {
+      return res.status(400).json({
+        success: false,
+        error: 'Customer ID and email are required'
+      });
+    }
+
+    const apiResult = await platformApiRequest({
+      endpoint: '/api/client/auth/register',
+      method: 'POST',
+      body: {
+        customer_id: customerId,
+        email
+      },
+      errorMessage: 'Failed to register to Mio'
+    });
+
+    console.log('[Register to Mio] Result:', apiResult);
+
+    res.json({
+      success: true,
+      data: apiResult
+    });
+  } catch (error) {
+    console.error('Register to Mio API error:', error);
+
+    res.status(error.statusCode || 500).json({
+      success: false,
+      error: error.message || 'Failed to register to Mio'
+    });
+  }
+});
+
 // POST /api/register-to-hub
 router.post('/register-to-hub', authenticate, async (req, res) => {
   try {

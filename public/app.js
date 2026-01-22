@@ -85,6 +85,14 @@ async function apiRequest(endpoint, data = {}) {
   const result = await response.json();
 
   if (!response.ok) {
+    // If unauthorized, clear session and show login page
+    if (response.status === 401) {
+      sessionId = null;
+      localStorage.removeItem('sessionId');
+      mainScreen.classList.add('hidden');
+      loginScreen.classList.remove('hidden');
+      resetCustomerView();
+    }
     throw new Error(result.error || 'An error occurred');
   }
 
@@ -135,7 +143,7 @@ lookupForm.addEventListener('submit', async (e) => {
     showLoading('Looking up customer...');
     const result = await apiRequest('/customer/lookup', { email });
 
-    console.log('[Customer Lookup] Success - ID:', result.customer.id, 'Email:', result.customer.email);
+    console.log('[Customer Lookup] Success - ID:', result.customer.id, 'Email:', result.customer.email, 'Name:', `${result.customer.firstName} ${result.customer.lastName}`.trim());
 
     currentCustomer = result.customer;
     displayCustomer(result.customer);
@@ -220,7 +228,21 @@ confirmProceedBtn.addEventListener('click', async () => {
       customerEmail: currentCustomer.email
     });
 
-    // Register customer to hub after successful payment
+    // Register customer to Mio
+    try {
+      const mioResult = await apiRequest('/register-to-mio', {
+        customerId: currentCustomer.id,
+        email: currentCustomer.email
+      });
+      console.log('[Register to Mio] Result:', mioResult.data);
+    } catch (mioError) {
+      console.error('[Register to Mio] Error:', mioError.message);
+      showError(confirmError, `Mio registration failed: ${mioError.message}`);
+      confirmModal.classList.remove('hidden');
+      return;
+    }
+
+    // Register customer to hub
     try {
       const hubResult = await apiRequest('/register-to-hub', {
         email: currentCustomer.email,
@@ -229,6 +251,9 @@ confirmProceedBtn.addEventListener('click', async () => {
       console.log('[Register to Hub] Result:', hubResult.data);
     } catch (hubError) {
       console.error('[Register to Hub] Error:', hubError.message);
+      showError(confirmError, `Hub registration failed: ${hubError.message}`);
+      confirmModal.classList.remove('hidden');
+      return;
     }
 
     await showSuccessModal(result);
